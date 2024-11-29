@@ -2,8 +2,11 @@ import styles from './CityList.module.css';
 import Spinner from './Spinner.jsx';
 import CityItem from './CityItem.jsx';
 import Message from './Message.jsx';
+import {useCities} from '../context/CitiesContext.jsx';
 
-export default function CityList({isLoading, cities}) {
+export default function CityList() {
+    const {cities, isLoading} = useCities();
+
     if (isLoading) {
         return <Spinner/>;
     }
@@ -14,5 +17,5 @@ export default function CityList({isLoading, cities}) {
         {cities.map(city => {
             return <CityItem key={city.id} city={city}/>;
         })}
-    </ul>
+    </ul>;
 }
