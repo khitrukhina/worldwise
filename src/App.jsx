@@ -15,7 +15,7 @@ const Homepage = lazy(() => import('./pages/Homepage'));
 const Product = lazy(() => import('./pages/Product'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-const Layout = lazy(() => import('./pages/Layout'));
+const AppLayout = lazy(() => import('./pages/AppLayout'));
 const Login = lazy(() => import('./pages/Login'));
 
 
@@ -29,7 +29,7 @@ function App() {
                         <Route element={<Product/>} path="product"></Route>
                         <Route element={<Pricing/>} path="pricing"></Route>
                         <Route element={<Login/>} path="login"></Route>
-                        <Route element={<ProtectedRoute><Layout/></ProtectedRoute>} path="app">
+                        <Route element={<ProtectedRoute><AppLayout/></ProtectedRoute>} path="app">
                             <Route index element={<Navigate replace to="cities"/>}></Route>
 
                             <Route path="cities" element={<CityList/>}></Route>

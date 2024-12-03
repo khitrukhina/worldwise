@@ -1,14 +1,14 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./Form.module.css";
 import Button from './Button.jsx';
 import BackButton from './BackButton.jsx';
-import {useUrlPosition} from '../hooks/useUrlPosition.js';
+import { useUrlPosition } from '../hooks/useUrlPosition.js';
 import Message from './Message.jsx';
 import Spinner from './Spinner.jsx';
 import DatePicker from 'react-datepicker';
-import {useCities} from '../context/CitiesContext.jsx';
-import {useNavigate} from 'react-router-dom';
+import { useCities } from '../context/CitiesContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 
@@ -21,7 +21,7 @@ export function convertToEmoji(countryCode) {
 }
 
 function Form() {
-    const {createCity, isLoading} = useCities();
+    const { createCity, isLoading } = useCities();
     const [lat, lng] = useUrlPosition();
     const navigate = useNavigate();
     const [cityName, setCityName] = useState('');
@@ -41,7 +41,7 @@ function Form() {
             try {
                 setGeocodingError('');
                 setIsLoadingGeocoding(true);
-                const res = await fetch(`${BASE_URL}/?latitude=${lat}&longtitude=${lng}`);
+                const res = await fetch(`${BASE_URL}/?latitude=${lat}&longitude=${lng}`);
                 const data = await res.json();
                 if (!data.countryCode) {
                     throw new Error('Not a city selected. Click somewhere else!')
@@ -65,13 +65,14 @@ function Form() {
         if (!cityName || !date) {
             return;
         }
+
         const newCity = {
             cityName,
             country,
             emoji,
             date,
             notes,
-            position: {lat, lng},
+            position: { lat, lng },
         };
         await createCity(newCity);
         navigate('/app/cities');
