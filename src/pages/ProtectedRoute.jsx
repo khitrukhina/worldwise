@@ -10,6 +10,7 @@ export default function ProtectedRoute({ children }) {
         if (!isAuth) {
             navigate('/');
         }
-    }, [isAuth, navigate()]);
-    return children;
+    }, [isAuth, navigate]);
+
+    return isAuth ? children : null;
 }

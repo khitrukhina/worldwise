@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useReducer} from 'react';
+import { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
 
 const url = 'http://localhost:9000'
 const CitiesContext = createContext();
@@ -51,57 +51,57 @@ function reducer(state, action) {
     }
 }
 
-function CitiesProvider({children}) {
-    const [{cities, isLoading, currentCity, error}, dispatch] = useReducer(
+function CitiesProvider({ children }) {
+    const [{ cities, isLoading, currentCity, error }, dispatch] = useReducer(
         reducer,
         initialState
     );
 
     useEffect(() => {
         async function fetchCities() {
-            dispatch({type: 'loading'});
+            dispatch({ type: 'loading' });
             try {
-                dispatch({type: 'loading'});
+                dispatch({ type: 'loading' });
                 const res = await fetch(`${url}/cities`);
                 const data = await res.json();
-                dispatch({type: 'cities/loaded', payload: data})
+                dispatch({ type: 'cities/loaded', payload: data })
             } catch (e) {
-                dispatch({type: 'rejected', payload: e});
+                dispatch({ type: 'rejected', payload: e });
             }
         }
 
         fetchCities();
     }, []);
 
-    async function getCity(id) {
+    const getCity = useCallback(async function getCity(id) {
         if (+id === currentCity.id) {
             return;
         }
         try {
-            dispatch({type: 'loading'});
+            dispatch({ type: 'loading' });
             const res = await fetch(`${url}/cities/${id}`);
             const data = await res.json();
-            dispatch({type: 'city/loaded', payload: data});
+            dispatch({ type: 'city/loaded', payload: data });
         } catch (e) {
-            dispatch({type: 'rejected', payload: e});
+            dispatch({ type: 'rejected', payload: e });
         }
-    }
+    }, [currentCity.id]);
 
     async function deleteCity(id) {
         try {
-            dispatch({type: 'loading'});
+            dispatch({ type: 'loading' });
             const res = await fetch(`${url}/cities/${id}`, {
                 method: 'DELETE',
             });
-            dispatch({type: 'city/deleted', payload: id});
+            dispatch({ type: 'city/deleted', payload: id });
         } catch (e) {
-            dispatch({type: 'rejected', payload: e});
+            dispatch({ type: 'rejected', payload: e });
         }
     }
 
     async function createCity(city) {
         try {
-            dispatch({type: 'loading'});
+            dispatch({ type: 'loading' });
             const res = await fetch(`${url}/cities`, {
                 method: 'POST',
                 body: JSON.stringify(city),
@@ -110,14 +110,14 @@ function CitiesProvider({children}) {
                 },
             });
             const data = await res.json();
-            dispatch({type: 'city/created', payload: data});
+            dispatch({ type: 'city/created', payload: data });
 
         } catch (e) {
-            dispatch({type: 'rejected', payload: e});
+            dispatch({ type: 'rejected', payload: e });
         }
     }
 
-    return <CitiesContext.Provider value={{error, deleteCity, createCity, cities, isLoading, getCity, currentCity}}>
+    return <CitiesContext.Provider value={{ error, deleteCity, createCity, cities, isLoading, getCity, currentCity }}>
         {children}
     </CitiesContext.Provider>;
 }
@@ -131,4 +131,4 @@ function useCities() {
     return context;
 }
 
-export {CitiesProvider, useCities};
+export { CitiesProvider, useCities };
